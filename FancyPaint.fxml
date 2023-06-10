@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="FPaintController"
+            prefHeight="600.0" prefWidth="900.0">
+
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem text="Open project"/>
+                <MenuItem text="Save project"/>
+                <MenuItem text="Export as png"/>
+            </Menu>
+        </MenuBar>
+    </top>
+    <center>
+        <HBox>
+            <VBox fx:id="toolBox">
+                <fx:define>
+                    <ToggleGroup fx:id="toggleGroup1"/>
+                </fx:define>
+                <RadioButton fx:id="moveTool" toggleGroup="$toggleGroup1"/>
+                <RadioButton fx:id="penTool" toggleGroup="$toggleGroup1"/>
+                <RadioButton fx:id="rectTool" toggleGroup="$toggleGroup1"/>
+                <RadioButton fx:id="bucketTool" toggleGroup="$toggleGroup1"/>
+<!--                <CheckBox fx:id=""/>-->
+                <ColorPicker fx:id="colorPicker"/>
+                <ScrollPane prefHeight="100.0">
+                    <ListView fx:id="layersList" onMouseClicked="#handleListViewClick" prefWidth="130.0">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                            </FXCollections>
+                        </items>
+                    </ListView>
+                </ScrollPane>
+                <HBox>
+                    <Button text="+" onMouseClicked="#addLayer"/>
+                    <Button text="-" onMouseClicked="#removeLayer"/>
+                    <Button text="↑" onMouseClicked="#moveLayer" fx:id="moveLayerUpButton"/>
+                    <Button text="↓" onMouseClicked="#moveLayer" fx:id="moveLayerDownButton"/>
+                </HBox>
+            </VBox>
+            <StackPane fx:id="canvasContainer">
+            </StackPane>
+        </HBox>
+    </center>
+</BorderPane>

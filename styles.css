@@ -1,0 +1,45 @@
+* {
+	-fx-font-family: "Montserrat";
+}
+
+#rCanvas {
+	-fx-border-color: #000;
+	-fx-border-width: 3;
+}
+
+.color-picker {
+	-fx-pref-height: 60;
+}
+
+#toolBox {
+	-fx-border-color: transparent #000 transparent transparent;
+	-fx-border-width: 0 3 0 0;
+}
+
+#toolBox .radio-button {
+    -fx-cursor: hand;
+    -fx-font-size: 40;
+    /*-fx-text-fill: white;*/
+    /*-fx-graphic: url('icon.png');*/
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-fill: red;
+    -fx-border-radius: 0;
+    /*-fx-padding: 40;*/
+}
+
+#toolBox .radio-button .radio .radio-mark {
+	-fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+#moveTool {
+	-fx-background-image: url('icon.png');
+}
+
+#penTool{}
+
+#rectTool{}
+
+#bucketTool{}
