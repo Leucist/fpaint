@@ -49,8 +49,7 @@
                     <Button text="↓" onMouseClicked="#moveLayer" fx:id="moveLayerDownButton"/>
                 </HBox>
             </VBox>
-            <StackPane fx:id="canvasContainer">
-            </StackPane>
+            <Canvas fx:id="rCanvas" width="500" height="500"/>
         </HBox>
     </center>
 </BorderPane>
