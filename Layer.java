@@ -40,7 +40,7 @@ public class Layer {
             }
             this.objects.remove(lastObj);           /* removes redundant point, that is now part of the line */
         }
-        else throw new IncompatibleLastElementException("Last object in layer is " + lastObj.getClass() + ". Must be Point.");
+        else throw new IncompatibleElementException("Last object in layer is " + lastObj.getClass() + ". Must be Point.");
     }
 
     public void createChain() {}
@@ -55,8 +55,10 @@ public class Layer {
             Drawable firstPiece = newDrawable.get(0);
             Drawable lastPiece = newDrawable.get(newDrawable.size() - 1);
             // throws exception if last piece is Point
+            if (firstPiece.getClass() == Point.class)
+                throw new IncompatibleElementException("First element of a polygonal drawable can not be Point.");
             if (lastPiece.getClass() == Point.class)
-                throw new IncompatibleLastElementException("Last element of a polygonal drawable can not be Point.");
+                throw new IncompatibleElementException("Last element of a polygonal drawable can not be Point.");
             // redirects drawable to one of two constructors;
             // ..if last and first points of drawable are the same - it's a figure, else - chain
             if (((Line)firstPiece).getPt1() == ((Line)lastPiece).getPt2()) createFigure();
