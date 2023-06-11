@@ -21,6 +21,10 @@
                 <MenuItem text="Export as png"/>
             </Menu>
         </MenuBar>
+        <HBox fx:id="completeDrawableManager" alignment="CENTER_RIGHT">
+            <Button text="✓" onMouseClicked="#completeDrawable"/>
+            <Button text="✕" onMouseClicked="#cancelCreatingDrawable"/>
+        </HBox>
     </top>
     <center>
         <HBox>

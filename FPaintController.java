@@ -4,11 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -23,6 +20,8 @@ public class FPaintController {
     private ColorPicker colorPicker;                    /* standard color picker */
     @FXML
     private VBox toolBox;                               /* tool box; contains all of the tools */
+    @FXML
+    private HBox completeDrawableManager;
     @FXML
     private ToggleGroup toggleGroup;                    /* abstract group to make layer menu/list scrollable */
     @FXML
@@ -55,6 +54,10 @@ public class FPaintController {
         g.setLineWidth(Line.getLineWidth());
         /* Adding listener to the mouse clicks on canvas */
         rCanvas.setOnMouseClicked(e -> handleClickOnCanvas(e, g));
+
+        /* Setting completeDrawableManager as hidden in the app's structure and visually */
+        completeDrawableManager.setManaged(false);
+        completeDrawableManager.setVisible(false);
     }
 
 
@@ -62,6 +65,8 @@ public class FPaintController {
     private void addLayer() {                   /* adds new layer and creates+adds related layer list item */
         vCanvas.addLayer();
         layerListItems.add(0, "Layer" + vCanvas.getLastId());
+        // completes a new drawable if it hasn't been finished
+        if (isAddingPoints) completeDrawable();
         // updates selected layer
         selectedLayer = 0;
     }
@@ -76,6 +81,9 @@ public class FPaintController {
             selectedLayer = selectedLayer > 0 ? selectedLayer - 1 : 0;
             // updates graphics on the screen
             vCanvas.redrawAll();
+
+            completeDrawableManager.setManaged(false);  /* sets completeDrawableManager as hidden in the app's structure */
+            completeDrawableManager.setVisible(false);  /* sets completeDrawableManager as hidden visually */
         }
     }
 
@@ -102,6 +110,7 @@ public class FPaintController {
 
     @FXML
     private void handleListViewClick() {        /* updates active layer index and sets layer of that index as selected */
+        if (isAddingPoints) completeDrawable();                /* completes a new drawable if it hasn't been finished */
         selectedLayer = layersList.getSelectionModel().getSelectedIndex();
     }
 
@@ -116,13 +125,28 @@ public class FPaintController {
             vCanvas.getLayers().get(selectedLayer).addPoint(x, y, colorPicker.getValue());
             if (isAddingPoints) vCanvas.getLayers().get(selectedLayer).createLine();
             else isAddingPoints = true;
+            completeDrawableManager.setManaged(true);  /* sets completeDrawableManager as visible */
+            completeDrawableManager.setVisible(true);
             vCanvas.redrawAll();
         }
     }
 
-    public void completeDrawable() {
+    @FXML
+    private void completeDrawable() {
         isAddingPoints = false;
         vCanvas.getLayers().get(selectedLayer).completeDrawable();
+        completeDrawableManager.setManaged(false);  /* sets completeDrawableManager as hidden in the app's structure */
+        completeDrawableManager.setVisible(false);  /* sets completeDrawableManager as hidden visually */
+    }
+
+    @FXML
+    private void cancelCreatingDrawable() {
+        isAddingPoints = false;
+        Layer sLayer = vCanvas.getLayers().get(selectedLayer);                  /* buff var for a selected layer */
+        sLayer.cancelCreatingDrawable(sLayer.collectDrawableComponents());      /* removes uncompleted drawable */
+        completeDrawableManager.setManaged(false);  /* sets completeDrawableManager as hidden in the app's structure */
+        completeDrawableManager.setVisible(false);  /* sets completeDrawableManager as hidden visually */
+        vCanvas.redrawAll();                        /* refreshes the canvas */
     }
 
     public void selectNew() {

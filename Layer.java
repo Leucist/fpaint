@@ -17,6 +17,8 @@ public class Layer {
     public void addObject(Drawable obj) { this.objects.add(obj); }
     public ArrayList<Drawable> getObjects() { return this.objects; }
 
+    public boolean isEmpty() { return this.objects.size() == 0; }
+
     public void addPoint(double x, double y, Color clr) {
         double size = Point.getSize();
         this.objects.add(new Point(x - size/2, y - size/2, clr));
@@ -45,11 +47,26 @@ public class Layer {
 
 //    public void createChain(ArrayList<Drawable> newDrawable) { this.objects.add(new Chain(newDrawable)); }
 //    public void createFigure(ArrayList<Drawable> newDrawable) {}
-    public void completeDrawable() {
+
+    public ArrayList<Drawable> collectDrawableComponents() {
         ArrayList<Drawable> newDrawable = new ArrayList<>();
-        for (int i=this.objects.size()-1; this.objects.get(i).isComplete() || i >= 0; i--) {
-            newDrawable.add(0, this.objects.get(i));
+        if (!this.isEmpty()) {          /* in case layer is empty */
+            for (int i = this.objects.size() - 1; i >= 0 && !this.objects.get(i).isComplete(); i--) {
+                newDrawable.add(0, this.objects.get(i));
+            }
         }
+        return newDrawable;
+    }
+
+    public void cancelCreatingDrawable(ArrayList<Drawable> components) {
+        for (Drawable obj : components) {
+            this.objects.remove(obj);
+        }
+    }
+
+    public void completeDrawable() {
+        if (this.isEmpty()) return;
+        ArrayList<Drawable> newDrawable = collectDrawableComponents();  /* collects pieces of a new drawable */
         if (newDrawable.size() == 1) newDrawable.get(0).setComplete();
         else {
             Drawable firstPiece = newDrawable.get(0);
@@ -65,10 +82,10 @@ public class Layer {
                 this.objects.add(new Chain(firstPiece.getColor(), newDrawable));
             else
                 this.objects.add(new Figure(firstPiece.getColor(), newDrawable));
+            // sets the new drawable as complete
+            this.objects.get(this.objects.size()-1).setComplete();
             // clears particles of a newly created drawable
-            for (Drawable obj : this.objects) {
-                this.objects.remove(obj);
-            }
+            cancelCreatingDrawable(newDrawable);
         }
 
     }
