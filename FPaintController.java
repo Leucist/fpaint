@@ -39,6 +39,7 @@ public class FPaintController {
     private Button moveLayerDownButton;
     private Drawable selectedObject;
     private int selectedLayer = 0;                      /*  */
+    private boolean isAddingPoints = false;
 
     public void initialize() {
         /* Creating observable list for dynamic modifying layer list content */
@@ -48,8 +49,11 @@ public class FPaintController {
         /* Initialising new virtual canvas */
         vCanvas = new VCanvas(rCanvas);
 
-        /* Adding listener to the mouse clicks on canvas */
+        /* Initialising GraphicsContext of the canvas */
         GraphicsContext g = rCanvas.getGraphicsContext2D();
+        /* Setting line width */
+        g.setLineWidth(Line.getLineWidth());
+        /* Adding listener to the mouse clicks on canvas */
         rCanvas.setOnMouseClicked(e -> handleClickOnCanvas(e, g));
     }
 
@@ -110,8 +114,15 @@ public class FPaintController {
         else if (penTool.isSelected()) {
             if (vCanvas.hasNoLayers()) return;
             vCanvas.getLayers().get(selectedLayer).addPoint(x, y, colorPicker.getValue());
+            if (isAddingPoints) vCanvas.getLayers().get(selectedLayer).createLine();
+            else isAddingPoints = true;
             vCanvas.redrawAll();
         }
+    }
+
+    public void completeDrawable() {
+        isAddingPoints = false;
+        vCanvas.getLayers().get(selectedLayer).completeDrawable();
     }
 
     public void selectNew() {

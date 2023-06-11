@@ -30,9 +30,8 @@ public class Point extends Drawable {
     public double getX() { return this.x; }
     public double getY() { return this.y; }
     public static double getSize() { return size; }
-    public Color getColor() { return this.color; }
-
-    public void setColor(Color clr) { this.color = clr; }
+//    public Color getColor() { return this.color; }
+//    public void setColor(Color clr) { this.color = clr; }
 
     @Override
     public void draw(GraphicsContext g) {
