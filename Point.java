@@ -4,23 +4,22 @@ import javafx.scene.paint.Color;
 public class Point extends Drawable {
     private double x, y;
     private static final double size = 6.;
-    private Color color;
 
     /* constructors */
     public Point(Color clr){
+        super(clr);
         this.x = 0;
         this.y = 0;
-        this.color = clr;
     }
     public Point(double x, double y, Color clr){
+        super(clr);
         this.x = x;
         this.y = y;
-        this.color = clr;
     }
     public Point(Point pt){
+        super(pt.getColor());
         this.x = pt.x;
         this.y = pt.y;
-        this.color = pt.color;
     }
 
     public void move(double x, double y) {
@@ -35,7 +34,7 @@ public class Point extends Drawable {
 
     @Override
     public void draw(GraphicsContext g) {
-        g.setFill(this.color);
+        g.setFill(this.getColor());
         g.fillRect(this.x, this.y, size, size);
     }
 }

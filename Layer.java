@@ -43,8 +43,8 @@ public class Layer {
         else throw new IncompatibleElementException("Last object in layer is " + lastObj.getClass() + ". Must be Point.");
     }
 
-    public void createChain() {}
-    public void createFigure() {}
+//    public void createChain(ArrayList<Drawable> newDrawable) { this.objects.add(new Chain(newDrawable)); }
+//    public void createFigure(ArrayList<Drawable> newDrawable) {}
     public void completeDrawable() {
         ArrayList<Drawable> newDrawable = new ArrayList<>();
         for (int i=this.objects.size()-1; this.objects.get(i).isComplete() || i >= 0; i--) {
@@ -61,8 +61,14 @@ public class Layer {
                 throw new IncompatibleElementException("Last element of a polygonal drawable can not be Point.");
             // redirects drawable to one of two constructors;
             // ..if last and first points of drawable are the same - it's a figure, else - chain
-            if (((Line)firstPiece).getPt1() == ((Line)lastPiece).getPt2()) createFigure();
-            else createChain();
+            if (((Line)firstPiece).getPt1() == ((Line)lastPiece).getPt2())
+                this.objects.add(new Chain(firstPiece.getColor(), newDrawable));
+            else
+                this.objects.add(new Figure(firstPiece.getColor(), newDrawable));
+            // clears particles of a newly created drawable
+            for (Drawable obj : this.objects) {
+                this.objects.remove(obj);
+            }
         }
 
     }
