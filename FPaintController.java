@@ -82,6 +82,7 @@ public class FPaintController {
             // updates graphics on the screen
             vCanvas.redrawAll();
 
+            isAddingPoints = false;
             completeDrawableManager.setManaged(false);  /* sets completeDrawableManager as hidden in the app's structure */
             completeDrawableManager.setVisible(false);  /* sets completeDrawableManager as hidden visually */
         }
