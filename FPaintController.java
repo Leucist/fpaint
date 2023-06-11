@@ -77,7 +77,7 @@ public class FPaintController {
 
     @FXML
     private void moveLayer(MouseEvent e) {
-        if (layerListItems.size() > 1 && selectedLayer != 0) {
+        if (layerListItems.size() > 1) {
             // used it in order to not multiply redundant similar code (united up/down methods)
             int direction = (e.getSource() == moveLayerUpButton) ? -1 : 1;
             // interrupts execution of the method if it could cause an error
