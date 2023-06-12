@@ -36,7 +36,7 @@ public class FPaintController {
     private Button moveLayerUpButton;
     @FXML
     private Button moveLayerDownButton;
-    private Drawable selectedObject;
+//    private Drawable selectedObject;
     private int selectedLayer = 0;                      /*  */
     private boolean isAddingPoints = false;
 
@@ -119,17 +119,19 @@ public class FPaintController {
         double x = e.getX();
         double y = e.getY();
         if (moveTool.isSelected()) {
-            vCanvas.redrawAll();
+            Drawable selectedObject = vCanvas.getLayers().get(selectedLayer).getSelected(x, y);
+            selectNewObject(selectedObject);
         }
         else if (penTool.isSelected()) {
             if (vCanvas.hasNoLayers()) return;
+            selectNewObject(null);      /* deselects active obj */
             vCanvas.getLayers().get(selectedLayer).addPoint(x, y, colorPicker.getValue());
             if (isAddingPoints) vCanvas.getLayers().get(selectedLayer).createLine();
             else isAddingPoints = true;
             completeDrawableManager.setManaged(true);  /* sets completeDrawableManager as visible */
             completeDrawableManager.setVisible(true);
-            vCanvas.redrawAll();
         }
+        vCanvas.redrawAll();
     }
 
     @FXML
@@ -150,8 +152,8 @@ public class FPaintController {
         vCanvas.redrawAll();                        /* refreshes the canvas */
     }
 
-    public void selectNew() {
-
+    public void selectNewObject(Drawable selectedObject) {
+        vCanvas.select(selectedLayer, selectedObject);
     }
 
     public void redrawCanvas() {

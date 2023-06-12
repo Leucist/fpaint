@@ -90,6 +90,14 @@ public class Layer {
 
     }
 
+    public Drawable getSelected(double x, double y) {
+        // reversed iteration here so if two obj-s collide at the same spot, only the highest will be selected
+        for (int i = this.objects.size() - 1; i >= 0; i--) {
+            if (this.objects.get(i).collides(x, y)) return this.objects.get(i);
+        }
+        return null;
+    }
+
     public void redraw(GraphicsContext g) {
         // redraws its content on the canvas
         for (Drawable obj : this.objects) {

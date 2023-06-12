@@ -2,26 +2,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
-public class Chain extends Drawable {
-    private final ArrayList<Drawable> components;
+public class Chain extends ComplexDrawable {
     Chain(Color clr, ArrayList<Drawable> components) {
-        super(clr);
-        this.components = components;
-        setColor(clr);
+        super(clr, components);
     }
 
     @Override
-    public void setColor(Color clr) {
-        super.setColor(clr);
-        for (Drawable component : this.components) {
-            component.setColor(clr);
-        }
-    }
-
-    @Override
-    public void draw(GraphicsContext g) {
-        for (Drawable component : this.components) {
-            component.draw(g);
-        }
+    public boolean collides(double x, double y) {
+        return super.borderCollides(x, y);
     }
 }

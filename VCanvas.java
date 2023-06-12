@@ -10,6 +10,7 @@ public class VCanvas {
     private final GraphicsContext g;
     private final ArrayList<Layer> layers;
     private int nextId = 1;
+    private Drawable selectedObject = null;
 
     public VCanvas(Canvas rCanvas) {
         this.rCanvas = rCanvas;
@@ -23,6 +24,12 @@ public class VCanvas {
     public ArrayList<Layer> getLayers() { return layers; }
     public int getLastId() { return this.nextId-1; }
     public boolean hasNoLayers() { return this.layers.size() == 0; }
+
+    public void select(int index, Drawable obj) {
+        if (this.selectedObject != null) this.selectedObject.setSelection(false);
+        this.selectedObject = obj;
+        if (this.selectedObject != null) this.selectedObject.setSelection(true);
+    }
 
     public void redrawAll() {
         this.g.clearRect(0, 0, rCanvas.getWidth(), rCanvas.getHeight());    /* clears all graphics on the canvas*/

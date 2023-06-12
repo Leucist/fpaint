@@ -2,26 +2,22 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
-public class Figure extends Drawable {
-    private final ArrayList<Drawable> components;
+public class Figure extends ComplexDrawable {
+    private Color fillColor;
     Figure(Color clr, ArrayList<Drawable> components) {
-        super(clr);
-        this.components = components;
-        setColor(clr);
+        super(clr, components);
+        this.fillColor = Color.TRANSPARENT;
     }
 
-    @Override
-    public void setColor(Color clr) {
-        super.setColor(clr);
-        for (Drawable component : this.components) {
-            component.setColor(clr);
-        }
-    }
+    public Color getFillColor () { return this.fillColor; }
+    public void setFillColor (Color clr) { this.fillColor = clr; }
 
     @Override
-    public void draw(GraphicsContext g) {
-        for (Drawable component : this.components) {
-            component.draw(g);
+    public boolean collides(double x, double y) {
+        if (this.fillColor == Color.TRANSPARENT) return super.borderCollides(x, y);
+        else {
+            // check if mouseClick is inside figure
+            return false;
         }
     }
 }
