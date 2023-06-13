@@ -1,5 +1,7 @@
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class Line extends Drawable {
     private final Point pt1, pt2;
@@ -16,11 +18,6 @@ public class Line extends Drawable {
 //        this.pt2 = ln.pt2;
 //    }
 
-    public void move(int x, int y) {
-        this.pt1.move(x, y);
-        this.pt2.move(x, y);
-    }
-
     /* getters */
     public Point getPt1() { return this.pt1; }
     public Point getPt2() { return this.pt2; }
@@ -31,6 +28,11 @@ public class Line extends Drawable {
         super.setSelection(b);
         pt1.setSelection(b);
         pt2.setSelection(b);
+    }
+
+    @Override
+    public Node getNode() {
+        return new javafx.scene.shape.Line(this.pt1.getX(), this.pt1.getY(), this.pt2.getX(), this.pt2.getY());
     }
 
     @Override
@@ -51,11 +53,16 @@ public class Line extends Drawable {
     }
 
     @Override
+    public void move(double diffX, double diffY) {
+        this.pt1.move(diffX, diffY);
+        this.pt2.move(diffX, diffY);
+    }
+
+    @Override
     public boolean collides(double x, double y) {
         if (pt1.collides(x, y)) return true;
         if (pt2.collides(x, y)) return true;
 
-        Point userClick = new Point(x - Point.getSize()/2, y - Point.getSize()/2);
         // calculates the length of the line (hypotenuse) using the Pythagorean theorem
         double l = Math.sqrt(Math.pow(pt1.getX() - pt2.getX(), 2) + Math.pow(pt1.getY() - pt2.getY(), 2));
         double l1 = Math.sqrt(Math.pow(pt1.getX() - x, 2) + Math.pow(pt1.getY() - y, 2)); /*between user click and pt1*/

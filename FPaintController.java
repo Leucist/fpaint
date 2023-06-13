@@ -1,13 +1,16 @@
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 
 public class FPaintController {
     private VCanvas vCanvas;                            /* virtual canvas; contains all layers with real canvases */
@@ -36,8 +39,9 @@ public class FPaintController {
     private Button moveLayerUpButton;
     @FXML
     private Button moveLayerDownButton;
-//    private Drawable selectedObject;
+    private Drawable selectedObject;
     private int selectedLayer = 0;                      /*  */
+    private double prevX, prevY;
     private boolean isAddingPoints = false;
 
     public void initialize() {
@@ -52,8 +56,17 @@ public class FPaintController {
         GraphicsContext g = rCanvas.getGraphicsContext2D();
         /* Setting line width */
         g.setLineWidth(Line.getLineWidth());
-        /* Adding listener to the mouse clicks on canvas */
+
+        /* Adding listeners */
+        /* ..to the mouse pressed on canvas */
+        rCanvas.setOnMousePressed(e -> {
+            prevX = e.getX();
+            prevY = e.getY();
+            System.out.println("xPressed: " + prevX + ", yPressed: " + prevY);
+        });
+        /* ..to the mouse click and dragging on canvas */
         rCanvas.setOnMouseClicked(e -> handleClickOnCanvas(e, g));
+        rCanvas.setOnMouseDragged(e -> handleDraggingOnCanvas(e, g));
 
         /* Setting completeDrawableManager as hidden in the app's structure and visually */
         completeDrawableManager.setManaged(false);
@@ -115,19 +128,35 @@ public class FPaintController {
         selectedLayer = layersList.getSelectionModel().getSelectedIndex();
     }
 
+    public void handleDraggingOnCanvas(MouseEvent e, GraphicsContext g) {
+        if (selectedObject != null && !vCanvas.hasNoLayers()) {
+            selectedObject.move((e.getX()- prevX), (e.getY()- prevY));
+            prevX = e.getX();       /* reassigns prev x and y */
+            prevY = e.getY();
+            vCanvas.redrawAll();
+        }
+    }
+
     public void handleClickOnCanvas(MouseEvent e, GraphicsContext g) {
+        if (vCanvas.hasNoLayers()) return;
         double x = e.getX();
         double y = e.getY();
         if (moveTool.isSelected()) {
-            Drawable selectedObject = vCanvas.getLayers().get(selectedLayer).getSelected(x, y);
+            selectedObject = vCanvas.getLayers().get(selectedLayer).getSelected(x, y);
             selectNewObject(selectedObject);
         }
         else if (penTool.isSelected()) {
-            if (vCanvas.hasNoLayers()) return;
             selectNewObject(null);      /* deselects active obj */
             vCanvas.getLayers().get(selectedLayer).addPoint(x, y, colorPicker.getValue());
             if (isAddingPoints) vCanvas.getLayers().get(selectedLayer).createLine();
-            else isAddingPoints = true;
+            else {
+                isAddingPoints = true;
+                // gets lastly added point and sets special cursor on its node
+                ArrayList<Drawable> objects = vCanvas.getLayers().get(selectedLayer).getObjects();
+                Node element = objects.get(objects.size()-1).getNode();
+                element.setOnMouseEntered(event -> { element.setCursor(Cursor.CLOSED_HAND); });/* sets special cursor */
+                element.setOnMouseExited(event -> { element.setCursor(Cursor.DEFAULT); });  /* sets default cursor */
+            }
             completeDrawableManager.setManaged(true);  /* sets completeDrawableManager as visible */
             completeDrawableManager.setVisible(true);
         }
@@ -156,7 +185,13 @@ public class FPaintController {
         vCanvas.select(selectedLayer, selectedObject);
     }
 
-    public void redrawCanvas() {
-        // check all the drawables and draw them again. Is called when changes occur
+    public void updateCursor() {
+        for (Layer layer : vCanvas.getLayers()) {
+            for (Drawable obj : layer.getObjects()) {
+                Node element = obj.getNode();
+                element.setOnMouseEntered(event -> { element.setCursor(Cursor.HAND); });    /* sets pointer cursor */
+                element.setOnMouseExited(event -> { element.setCursor(Cursor.DEFAULT); });  /* sets default cursor */
+            }
+        }
     }
 }

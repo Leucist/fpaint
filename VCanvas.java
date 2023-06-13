@@ -31,6 +31,7 @@ public class VCanvas {
         if (this.selectedObject != null) this.selectedObject.setSelection(true);
     }
 
+    // check all the drawables and draw them again; Might be called when changes occur
     public void redrawAll() {
         this.g.clearRect(0, 0, rCanvas.getWidth(), rCanvas.getHeight());    /* clears all graphics on the canvas*/
         for (int i=layers.size()-1; i>=0; i--) {    /* reversed iteration here to save matching indexation in controls*/
