@@ -58,8 +58,13 @@ public class Figure extends ComplexDrawable {
             // DOESN'T WORK YET
 
             // checks if mouseClick is inside figure
-            ArrayList<Point> points = this.getPoints();
-            return false;
+            int borderCollisions = 0;
+            for (double rayY = y; rayY > 0; rayY--) {
+                for (Drawable line : super.getComponents()) {
+                    if (line.collides(x, rayY)) borderCollisions++;
+                }
+            }
+            return (borderCollisions % 2 == 1);
         }
     }
 }

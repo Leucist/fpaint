@@ -68,6 +68,7 @@ public class Line extends Drawable {
         double l1 = Math.sqrt(Math.pow(pt1.getX() - x, 2) + Math.pow(pt1.getY() - y, 2)); /*between user click and pt1*/
         double l2 = Math.sqrt(Math.pow(pt2.getX() - x, 2) + Math.pow(pt2.getY() - y, 2)); /*between user click and pt2*/
 
-        return (Math.abs(l - (l1 + l2)) <= LINE_WIDTH);
+//        return (Math.abs(l - (l1 + l2)) <= LINE_WIDTH);
+        return (Math.abs(l - (l1 + l2)) <= 0.1);
     }
 }
