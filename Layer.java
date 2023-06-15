@@ -45,9 +45,6 @@ public class Layer {
         else throw new IncompatibleElementException("Last object in layer is " + lastObj.getClass() + ". Must be Point.");
     }
 
-//    public void createChain(ArrayList<Drawable> newDrawable) { this.objects.add(new Chain(newDrawable)); }
-//    public void createFigure(ArrayList<Drawable> newDrawable) {}
-
     public ArrayList<Drawable> collectDrawableComponents() {
         ArrayList<Drawable> newDrawable = new ArrayList<>();
         if (!this.isEmpty()) {          /* in case layer is empty */

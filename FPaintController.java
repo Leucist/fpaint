@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,7 @@ public class FPaintController {
     private Drawable selectedObject;
     private int selectedLayer = 0;                      /*  */
     private double prevX, prevY;
+    private double firstPointX, firstPointY;
     private boolean isAddingPoints = false;
 
     public void initialize() {
@@ -62,6 +64,7 @@ public class FPaintController {
         rCanvas.setOnMousePressed(e -> handlePressOnCanvas(e, g));          /* to the mouse pressed on canvas */
         rCanvas.setOnMouseClicked(e -> handleClickOnCanvas(e, g));          /* to the mouse click on canvas */
         rCanvas.setOnMouseDragged(e -> handleDraggingOnCanvas(e, g));       /* to the mouse dragging on canvas */
+        rCanvas.setOnMouseMoved(this::handleMouseMoveOnCanvas);       /* to the mouse moving on canvas */
 
         /* Setting completeDrawableManager as hidden in the app's structure and visually */
         completeDrawableManager.setManaged(false);
@@ -142,25 +145,30 @@ public class FPaintController {
         }
     }
 
+    public void handleMouseMoveOnCanvas(MouseEvent e) {
+        if (vCanvas.hasNoLayers()) return;
+        if (isAddingPoints) {
+            System.out.println("firstPointX: " + firstPointX + "   firstPointY: " + firstPointY);
+            System.out.println("e.getX(): " + e.getX() + "   e.getY(): " + e.getY());
+            if (e.getX() == firstPointX && e.getY() == firstPointY) rCanvas.setCursor(Cursor.CLOSED_HAND);
+        }
+    }
+
     public void handleClickOnCanvas(MouseEvent e, GraphicsContext g) {
         if (vCanvas.hasNoLayers()) return;
         double x = e.getX();
         double y = e.getY();
-//        if (moveTool.isSelected()) {
-//            selectedObject = vCanvas.getLayers().get(selectedLayer).getSelected(x, y);
-//            selectNewObject(selectedObject);
-//        }
         if (penTool.isSelected()) {
             selectNewObject(null);      /* deselects active obj */
             vCanvas.getLayers().get(selectedLayer).addPoint(x, y, colorPicker.getValue());
             if (isAddingPoints) vCanvas.getLayers().get(selectedLayer).createLine();
             else {
                 isAddingPoints = true;
-                // gets lastly added point and sets special cursor on its node
+                // makes first added point selected
                 ArrayList<Drawable> objects = vCanvas.getLayers().get(selectedLayer).getObjects();
-                Node element = objects.get(objects.size()-1).getNode();
-                element.setOnMouseEntered(event -> { element.setCursor(Cursor.CLOSED_HAND); });/* sets special cursor */
-                element.setOnMouseExited(event -> { element.setCursor(Cursor.DEFAULT); });  /* sets default cursor */
+                Point firstPoint = (Point)objects.get(objects.size()-1);
+                firstPointX = firstPoint.getX();
+                firstPointY = firstPoint.getY();
             }
             completeDrawableManager.setManaged(true);  /* sets completeDrawableManager as visible */
             completeDrawableManager.setVisible(true);

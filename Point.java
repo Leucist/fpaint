@@ -53,8 +53,8 @@ public class Point extends Drawable {
 
     @Override
     public boolean collides(double x, double y) {
-        for (int i = 0; i< SIZE; i++) {
-            for (int j = 0; j< SIZE; j++) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
                 if (this.x+i == x && this.y+j == y) return true;
             }
         }
