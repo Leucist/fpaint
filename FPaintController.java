@@ -59,15 +59,9 @@ public class FPaintController {
         g.setLineWidth(Line.getLineWidth());
 
         /* Adding listeners */
-        /* ..to the mouse pressed on canvas */
-        rCanvas.setOnMousePressed(e -> {
-            prevX = e.getX();
-            prevY = e.getY();
-            System.out.println("xPressed: " + prevX + ", yPressed: " + prevY);
-        });
-        /* ..to the mouse click and dragging on canvas */
-        rCanvas.setOnMouseClicked(e -> handleClickOnCanvas(e, g));
-        rCanvas.setOnMouseDragged(e -> handleDraggingOnCanvas(e, g));
+        rCanvas.setOnMousePressed(e -> handlePressOnCanvas(e, g));          /* to the mouse pressed on canvas */
+        rCanvas.setOnMouseClicked(e -> handleClickOnCanvas(e, g));          /* to the mouse click on canvas */
+        rCanvas.setOnMouseDragged(e -> handleDraggingOnCanvas(e, g));       /* to the mouse dragging on canvas */
 
         /* Setting completeDrawableManager as hidden in the app's structure and visually */
         completeDrawableManager.setManaged(false);
@@ -129,6 +123,16 @@ public class FPaintController {
         selectedLayer = layersList.getSelectionModel().getSelectedIndex();
     }
 
+    public void handlePressOnCanvas(MouseEvent e, GraphicsContext g) {
+        if (vCanvas.hasNoLayers()) return;
+        prevX = e.getX();
+        prevY = e.getY();
+        if (moveTool.isSelected()) {
+            selectedObject = vCanvas.getLayers().get(selectedLayer).getSelected(prevX, prevY);
+            selectNewObject(selectedObject);
+        }
+    }
+
     public void handleDraggingOnCanvas(MouseEvent e, GraphicsContext g) {
         if (selectedObject != null && !vCanvas.hasNoLayers()) {
             selectedObject.move((e.getX()- prevX), (e.getY()- prevY));
@@ -142,11 +146,11 @@ public class FPaintController {
         if (vCanvas.hasNoLayers()) return;
         double x = e.getX();
         double y = e.getY();
-        if (moveTool.isSelected()) {
-            selectedObject = vCanvas.getLayers().get(selectedLayer).getSelected(x, y);
-            selectNewObject(selectedObject);
-        }
-        else if (penTool.isSelected()) {
+//        if (moveTool.isSelected()) {
+//            selectedObject = vCanvas.getLayers().get(selectedLayer).getSelected(x, y);
+//            selectNewObject(selectedObject);
+//        }
+        if (penTool.isSelected()) {
             selectNewObject(null);      /* deselects active obj */
             vCanvas.getLayers().get(selectedLayer).addPoint(x, y, colorPicker.getValue());
             if (isAddingPoints) vCanvas.getLayers().get(selectedLayer).createLine();
