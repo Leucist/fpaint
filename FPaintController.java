@@ -44,8 +44,9 @@ public class FPaintController {
     private Drawable selectedObject;
     private int selectedLayer = 0;                      /*  */
     private double prevX, prevY;
-    private double firstPointX, firstPointY;
-    private boolean isAddingPoints = false;
+//    private double firstPointX, firstPointY;
+    private Point firstPoint;
+    private boolean isAddingPoints;
 
     public void initialize() {
         /* Creating observable list for dynamic modifying layer list content */
@@ -66,9 +67,8 @@ public class FPaintController {
         rCanvas.setOnMouseDragged(e -> handleDraggingOnCanvas(e, g));       /* to the mouse dragging on canvas */
         rCanvas.setOnMouseMoved(this::handleMouseMoveOnCanvas);       /* to the mouse moving on canvas */
 
-        /* Setting completeDrawableManager as hidden in the app's structure and visually */
-        completeDrawableManager.setManaged(false);
-        completeDrawableManager.setVisible(false);
+        /* Setting isAddingPoints as false and completeDrawableManager as hidden in the app's structure and visually */
+        resetPenTool();
     }
 
 
@@ -93,9 +93,7 @@ public class FPaintController {
             // updates graphics on the screen
             vCanvas.redrawAll();
 
-            isAddingPoints = false;
-            completeDrawableManager.setManaged(false);  /* sets completeDrawableManager as hidden in the app's structure */
-            completeDrawableManager.setVisible(false);  /* sets completeDrawableManager as hidden visually */
+            resetPenTool();
         }
     }
 
@@ -148,9 +146,8 @@ public class FPaintController {
     public void handleMouseMoveOnCanvas(MouseEvent e) {
         if (vCanvas.hasNoLayers()) return;
         if (isAddingPoints) {
-            System.out.println("firstPointX: " + firstPointX + "   firstPointY: " + firstPointY);
-            System.out.println("e.getX(): " + e.getX() + "   e.getY(): " + e.getY());
-            if (e.getX() == firstPointX && e.getY() == firstPointY) rCanvas.setCursor(Cursor.CLOSED_HAND);
+            if (firstPoint.collides(e.getX(), e.getY())) rCanvas.setCursor(Cursor.CLOSED_HAND);
+            else rCanvas.setCursor(Cursor.DEFAULT);
         }
     }
 
@@ -160,37 +157,39 @@ public class FPaintController {
         double y = e.getY();
         if (penTool.isSelected()) {
             selectNewObject(null);      /* deselects active obj */
+            if (firstPoint != null) {
+                // changes coords to the first point's (of the figure) if cursor collides it
+                if (firstPoint.collides(e.getX(), e.getY())) {
+                    x = firstPoint.getX();
+                    y = firstPoint.getY();
+                }
+            }
+            // adds new point to the selected layer
             vCanvas.getLayers().get(selectedLayer).addPoint(x, y, colorPicker.getValue());
+            // creates line if it's not the first point
             if (isAddingPoints) vCanvas.getLayers().get(selectedLayer).createLine();
             else {
                 isAddingPoints = true;
-                // makes first added point selected
+                // saves the first point of a potential figure
                 ArrayList<Drawable> objects = vCanvas.getLayers().get(selectedLayer).getObjects();
-                Point firstPoint = (Point)objects.get(objects.size()-1);
-                firstPointX = firstPoint.getX();
-                firstPointY = firstPoint.getY();
+                firstPoint = (Point)objects.get(objects.size()-1);
             }
-            completeDrawableManager.setManaged(true);  /* sets completeDrawableManager as visible */
-            completeDrawableManager.setVisible(true);
+            changeMenuVisibility(true);  /* sets completeDrawableManager as visible */
         }
         vCanvas.redrawAll();
     }
 
     @FXML
     private void completeDrawable() {
-        isAddingPoints = false;
         vCanvas.getLayers().get(selectedLayer).completeDrawable();
-        completeDrawableManager.setManaged(false);  /* sets completeDrawableManager as hidden in the app's structure */
-        completeDrawableManager.setVisible(false);  /* sets completeDrawableManager as hidden visually */
+        resetPenTool();
     }
 
     @FXML
     private void cancelCreatingDrawable() {
-        isAddingPoints = false;
         Layer sLayer = vCanvas.getLayers().get(selectedLayer);                  /* buff var for a selected layer */
         sLayer.cancelCreatingDrawable(sLayer.collectDrawableComponents());      /* removes uncompleted drawable */
-        completeDrawableManager.setManaged(false);  /* sets completeDrawableManager as hidden in the app's structure */
-        completeDrawableManager.setVisible(false);  /* sets completeDrawableManager as hidden visually */
+        resetPenTool();
         vCanvas.redrawAll();                        /* refreshes the canvas */
     }
 
@@ -198,13 +197,15 @@ public class FPaintController {
         vCanvas.select(selectedLayer, selectedObject);
     }
 
-    public void updateCursor() {
-        for (Layer layer : vCanvas.getLayers()) {
-            for (Drawable obj : layer.getObjects()) {
-                Node element = obj.getNode();
-                element.setOnMouseEntered(event -> { element.setCursor(Cursor.HAND); });    /* sets pointer cursor */
-                element.setOnMouseExited(event -> { element.setCursor(Cursor.DEFAULT); });  /* sets default cursor */
-            }
-        }
+    private void resetPenTool() {
+        isAddingPoints = false;
+        changeMenuVisibility(false);
+
+        rCanvas.setCursor(Cursor.DEFAULT);
+    }
+
+    private void changeMenuVisibility(boolean b) {
+        completeDrawableManager.setManaged(b);  /* sets completeDrawableManager's affection to the app's structure */
+        completeDrawableManager.setVisible(b);  /* sets completeDrawableManager's visibility */
     }
 }
