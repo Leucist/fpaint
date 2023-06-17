@@ -49,6 +49,8 @@ public class Figure extends ComplexDrawable {
     public boolean collides(double x, double y) {
         if (this.fillColor == Color.TRANSPARENT) return super.borderCollides(x, y);
         else {
+            // checks if mouseClick is at the figure's border
+            if (super.borderCollides(x, y)) return true;
             // checks if mouseClick is inside figure
             int borderCollisions = 0;
             for (double rayY = y; rayY > 0; rayY--) {
