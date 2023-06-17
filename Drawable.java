@@ -1,4 +1,3 @@
-import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -22,7 +21,6 @@ public abstract class Drawable {
     public void setComplete() { this.isComplete = true; }
     public void setSelection(boolean b) { this.isSelected = b; }
 
-    public abstract Node getNode();
     public abstract void draw(GraphicsContext g);
     public abstract boolean collides(double x, double y);
     public abstract void move(double diffX, double diffY);

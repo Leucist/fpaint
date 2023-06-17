@@ -1,7 +1,5 @@
-import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class Line extends Drawable {
     private final Point pt1, pt2;
@@ -31,8 +29,10 @@ public class Line extends Drawable {
     }
 
     @Override
-    public Node getNode() {
-        return new javafx.scene.shape.Line(this.pt1.getX(), this.pt1.getY(), this.pt2.getX(), this.pt2.getY());
+    public void setColor(Color clr) {
+        super.setColor(clr);
+        pt1.setColor(clr);
+        pt2.setColor(clr);
     }
 
     @Override

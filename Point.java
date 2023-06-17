@@ -1,7 +1,5 @@
-import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class Point extends Drawable {
     private double x, y;
@@ -27,11 +25,6 @@ public class Point extends Drawable {
     public double getX() { return this.x; }
     public double getY() { return this.y; }
     public static double getSize() { return SIZE; }
-
-    @Override
-    public Node getNode() {
-        return new Rectangle(this.x, this.y, SIZE, SIZE);
-    }
 
     @Override
     public void draw(GraphicsContext g) {

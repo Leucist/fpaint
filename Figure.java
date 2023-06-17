@@ -16,38 +16,32 @@ public class Figure extends ComplexDrawable {
     public Color getFillColor () { return this.fillColor; }
     public void setFillColor (Color clr) { this.fillColor = clr; }
 
-    private ArrayList<Point> getPoints() {
-        ArrayList<Point> points = new ArrayList<>();
-        for (Drawable obj : super.getComponents()) {
-            Line line = (Line) obj;
-            points.add(line.getPt1());
-            points.add(line.getPt2());
-        }
-        return points;
-    }
-
-    private ArrayList<Double> getPointsCoords() {
-        ArrayList<Double> pointsCoords = new ArrayList<>();
-        for (Drawable obj : super.getComponents()) {
-            Line line = (Line) obj;
-            pointsCoords.add(line.getPt1().getX());
-            pointsCoords.add(line.getPt1().getY());
-        }
-        return pointsCoords;
+    @Override
+    public void setColor(Color clr) {
+        super.setColor(clr);
+        this.fillColor = clr;
     }
 
     @Override
-    public Node getNode() {
-        ArrayList<Double> pointsCoords = this.getPointsCoords();
-        if (this.fillColor == Color.TRANSPARENT) {              /* builds polyline from a figure border */
-            Polyline polyline = new Polyline();
-            polyline.getPoints().addAll(pointsCoords);
-            return polyline;
-        }
-        else {
-            Polygon polygon = new Polygon();
-            polygon.getPoints().addAll(pointsCoords);
-            return polygon;
+    public void draw(GraphicsContext g) {
+        super.draw(g);
+
+        if (this.fillColor != Color.TRANSPARENT) {
+            ArrayList<Drawable> components = super.getComponents();
+            int size = components.size();  // counts points of all the components, which are Lines
+            double[] xPoints = new double[size+1];  /* +1 to add both first and last points */
+            double[] yPoints = new double[size+1];
+            for (int i = 0; i <= size-1; i++) {
+                Point point = ((Line) components.get(i)).getPt1();
+                xPoints[i] = point.getX();
+                yPoints[i] = point.getY();
+            }
+            // adding coords of the first point in the end cause figure is closed
+            Point point = ((Line) components.get(0)).getPt1();
+            xPoints[size] = point.getX();
+            yPoints[size] = point.getY();
+
+            g.fillPolygon(xPoints, yPoints, size+1);
         }
     }
 
@@ -55,8 +49,6 @@ public class Figure extends ComplexDrawable {
     public boolean collides(double x, double y) {
         if (this.fillColor == Color.TRANSPARENT) return super.borderCollides(x, y);
         else {
-            // DOESN'T WORK YET
-
             // checks if mouseClick is inside figure
             int borderCollisions = 0;
             for (double rayY = y; rayY > 0; rayY--) {

@@ -25,7 +25,7 @@ public class VCanvas {
     public int getLastId() { return this.nextId-1; }
     public boolean hasNoLayers() { return this.layers.size() == 0; }
 
-    public void select(int index, Drawable obj) {
+    public void select(Drawable obj) {
         if (this.selectedObject != null) this.selectedObject.setSelection(false);
         this.selectedObject = obj;
         if (this.selectedObject != null) this.selectedObject.setSelection(true);

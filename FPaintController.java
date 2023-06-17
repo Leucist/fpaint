@@ -62,12 +62,12 @@ public class FPaintController {
         g.setLineWidth(Line.getLineWidth());
 
         /* Adding listeners */
-        rCanvas.setOnMousePressed(e -> handlePressOnCanvas(e, g));          /* to the mouse pressed on canvas */
+        rCanvas.setOnMousePressed(this::handlePressOnCanvas);               /* to the mouse pressed on canvas */
         rCanvas.setOnMouseClicked(e -> handleClickOnCanvas(e, g));          /* to the mouse click on canvas */
         rCanvas.setOnMouseDragged(e -> handleDraggingOnCanvas(e, g));       /* to the mouse dragging on canvas */
-        rCanvas.setOnMouseMoved(this::handleMouseMoveOnCanvas);       /* to the mouse moving on canvas */
+        rCanvas.setOnMouseMoved(this::handleMouseMoveOnCanvas);             /* to the mouse moving on canvas */
 
-        /* Setting isAddingPoints as false and completeDrawableManager as hidden in the app's structure and visually */
+        /* Setting isAddingPoints as false And completeDrawableManager as hidden in the app's structure and visually */
         resetPenTool();
     }
 
@@ -124,11 +124,11 @@ public class FPaintController {
         selectedLayer = layersList.getSelectionModel().getSelectedIndex();
     }
 
-    public void handlePressOnCanvas(MouseEvent e, GraphicsContext g) {
+    public void handlePressOnCanvas(MouseEvent e) {
         if (vCanvas.hasNoLayers()) return;
         prevX = e.getX();
         prevY = e.getY();
-        if (moveTool.isSelected()) {
+        if (moveTool.isSelected() || bucketTool.isSelected()) {
             selectedObject = vCanvas.getLayers().get(selectedLayer).getSelected(prevX, prevY);
             selectNewObject(selectedObject);
         }
@@ -182,6 +182,11 @@ public class FPaintController {
             }
             changeMenuVisibility(true);  /* sets completeDrawableManager as visible */
         }
+        else if (bucketTool.isSelected()) {
+            if (selectedObject != null) {
+                selectedObject.setColor(colorPicker.getValue());
+            }
+        }
         vCanvas.redrawAll();
     }
 
@@ -200,7 +205,7 @@ public class FPaintController {
     }
 
     public void selectNewObject(Drawable selectedObject) {
-        vCanvas.select(selectedLayer, selectedObject);
+        vCanvas.select(selectedObject);
     }
 
     private void resetPenTool() {
