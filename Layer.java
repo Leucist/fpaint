@@ -21,7 +21,8 @@ public class Layer {
 
     public void addPoint(double x, double y, Color clr) {
         double size = Point.getSize();
-        this.objects.add(new Point(x - size/2, y - size/2, clr));
+//        this.objects.add(new Point(x - size/2, y - size/2, clr));
+        this.objects.add(new Point(x, y, clr));
     }
 
     public void addLine(Point pt1, Point pt2, Color clr) {

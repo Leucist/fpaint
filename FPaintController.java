@@ -157,18 +157,24 @@ public class FPaintController {
         double y = e.getY();
         if (penTool.isSelected()) {
             selectNewObject(null);      /* deselects active obj */
+
+            double pointOffset = Point.getSize()/2; /* sets an offset, so point would appear directly under cursor */
+            x = x - pointOffset;
+            y = y - pointOffset;
+
             if (firstPoint != null) {
-                // changes coords to the first point's (of the figure) if cursor collides it
+                // sets point coords the same as first point in figure has if cursor collides first point on click
                 if (firstPoint.collides(e.getX(), e.getY())) {
                     x = firstPoint.getX();
                     y = firstPoint.getY();
                 }
             }
+
             // adds new point to the selected layer
             vCanvas.getLayers().get(selectedLayer).addPoint(x, y, colorPicker.getValue());
             // creates line if it's not the first point
             if (isAddingPoints) vCanvas.getLayers().get(selectedLayer).createLine();
-            else {
+            else {  /* if it is the first point */
                 isAddingPoints = true;
                 // saves the first point of a potential figure
                 ArrayList<Drawable> objects = vCanvas.getLayers().get(selectedLayer).getObjects();
