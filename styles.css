@@ -1,45 +1,142 @@
 * {
+	/*-fx-background-color: #555;*/
+}
+
+.text {
 	-fx-font-family: "Montserrat";
+	-fx-font-weight: 500;
+	-fx-fill: #333;
+}
+
+#borderPane {
+	-fx-background-color: #666;
+}
+
+.menu-bar {
+	-fx-background-color: #444;
+}
+
+.menu-bar .text {
+	-fx-fill: #fcba03;
+	-fx-background-color: #555;
+}
+
+.menu {
+	-fx-cursor: hand;
+	-fx-background-color: #444;
+	/*-fx-border-color: #fcba03;*/
+	/*-fx-border-width: 0 1;*/
+}
+.menu:hover {
+	-fx-transition: 1s;
+	-fx-background-color: #333;
+	-fx-effect: dropshadow(gaussian, #333, 10, 0, 0, 0);
+}
+
+.menu-item {
+	-fx-padding: 5;
+	-fx-background-color: #555;
 }
 
 #rCanvas {
-	-fx-border-color: #000;
-	-fx-border-width: 3;
+	-fx-translate-x: 100;
+	-fx-translate-y: 20;
 }
 
 .color-picker {
+	-fx-cursor: hand;
 	-fx-pref-height: 60;
+	-fx-background-color: #777;
+}
+.color-picker .text {
+    -fx-fill: #333;
+}
+.color-picker .color-picker-label {
+	-fx-background-color: #777;
+}
+.color-picker .color-picker-label .text {
+	-fx-fill: #dadada;
 }
 
 #toolBox {
-	-fx-border-color: transparent #000 transparent transparent;
+	-fx-spacing: 10;
+	-fx-alignment: top-center;
+	-fx-padding: 10 0 0 0;
+	-fx-border-color: #222;
 	-fx-border-width: 0 3 0 0;
+	-fx-background-color: #555;
 }
 
 #toolBox .radio-button {
     -fx-cursor: hand;
-    -fx-font-size: 40;
-    /*-fx-text-fill: white;*/
-    /*-fx-graphic: url('icon.png');*/
     -fx-background-repeat: no-repeat;
-    -fx-background-size: cover;
+    -fx-background-size: 40;
     -fx-background-position: center;
-    -fx-fill: red;
-    -fx-border-radius: 0;
-    /*-fx-padding: 40;*/
+    -fx-background-radius: 10;
+
+    -fx-background-color: #777;
+    -fx-padding: 20;
 }
 
-#toolBox .radio-button .radio .radio-mark {
-	-fx-background-color: transparent;
-    -fx-border-width: 0;
+#toolBox .radio-button:selected {
+	-fx-background-color: #999;
+}
+
+.radio-button .radio {
+    -fx-opacity: 0;
 }
 
 #moveTool {
-	-fx-background-image: url('icon.png');
+	-fx-background-image: url('move.png');
+}
+#penTool {
+	-fx-background-image: url('pen.png');
+}
+#bucketTool {
+	-fx-background-image: url('bucket.png');
 }
 
-#penTool{}
+.scroll-pane {
+	-fx-background-color: #333;
+	/*-fx-fit-to-height: true;*/
+	-fx-fit-to-width: true;
+}
 
-#rectTool{}
+.scroll-pane .list-cell {
+    -fx-background-color: #999;
+}
+.scroll-pane .list-cell:selected {
+    -fx-background-color: #c8d6e0;
+}
 
-#bucketTool{}
+
+.scroll-pane .text {
+	-fx-fill: #222;
+}
+
+.scroll-bar {
+	-fx-background-color: #333;
+}
+
+.list-view {
+	-fx-background-color: #777;
+}
+
+#layerButtons {
+	-fx-spacing: 5;
+}
+
+#layerButtons .button {
+	-fx-font-size: 18;
+	/*-fx-pref-width: 40;*/
+    /*-fx-pref-height: 40;*/
+}
+
+.button {
+	-fx-cursor: hand;
+	-fx-background-color: #333;
+}
+.button .text {
+	-fx-fill: #dadada;
+	-fx-font-weight: 700;
+}

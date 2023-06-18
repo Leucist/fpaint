@@ -1,6 +1,5 @@
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -13,7 +12,7 @@ public class FancyPaintApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FancyPaint.fxml"));
 //        loader.setController(this);
 
-        Pane root = loader.load();
+        Pane root = loader.load();  /* requires exception handling */
 
         stage.setTitle("Fancy Paint");
         stage.getIcons().add(new Image("icon.png"));

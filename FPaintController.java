@@ -1,23 +1,29 @@
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.Cursor;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class FPaintController {
     private VCanvas vCanvas;                            /* virtual canvas; contains all layers with real canvases */
     @FXML
     private Canvas rCanvas;                             /* canvas for drawing; "points" to the active layer's canvas */
+    @FXML
+    private MenuBar upperMenu;
     @FXML
     private ListView<String> layersList;                /* menu list for selection of the active layer */
     private ObservableList<String> layerListItems;      /* list that's used to dynamically change content of the layer list */
@@ -34,8 +40,6 @@ public class FPaintController {
     @FXML
     private RadioButton penTool;                        /* tool used to create points -> lines -> figures */
     @FXML
-    private RadioButton rectTool;                       /* tool used to easily create rectangles */
-    @FXML
     private RadioButton bucketTool;                     /* tool used to color entire object */
     @FXML
     private Button moveLayerUpButton;
@@ -44,17 +48,20 @@ public class FPaintController {
     private Drawable selectedObject;
     private int selectedLayer = 0;                      /*  */
     private double prevX, prevY;
-//    private double firstPointX, firstPointY;
     private Point firstPoint;
     private boolean isAddingPoints;
 
     public void initialize() {
+        /* Initialising CSS */
+        initializeCSS();
+
         /* Creating observable list for dynamic modifying layer list content */
         layerListItems = FXCollections.observableArrayList();
         layersList.setItems(layerListItems);
 
         /* Initialising new virtual canvas */
         vCanvas = new VCanvas(rCanvas);
+        vCanvas.redrawAll();    /* to set canvas white */
 
         /* Initialising GraphicsContext of the canvas */
         GraphicsContext g = rCanvas.getGraphicsContext2D();
@@ -69,6 +76,10 @@ public class FPaintController {
 
         /* Setting isAddingPoints as false And completeDrawableManager as hidden in the app's structure and visually */
         resetPenTool();
+    }
+
+    private void initializeCSS() {
+
     }
 
 
@@ -218,5 +229,66 @@ public class FPaintController {
     private void changeMenuVisibility(boolean b) {
         completeDrawableManager.setManaged(b);  /* sets completeDrawableManager's affection to the app's structure */
         completeDrawableManager.setVisible(b);  /* sets completeDrawableManager's visibility */
+    }
+
+    @FXML
+    private void onOpen() {
+        System.out.println("lol");
+    }
+
+    @FXML
+    private void onSave() {
+        // creates objectMapper to serialise json
+        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println("lol");
+    }
+
+    @FXML
+    private void onExport() {
+        // creates new dialog window for filename input
+        TextInputDialog dialog = new TextInputDialog();
+        // sets dialog window data
+        setDialogIcon(dialog);
+        dialog.setTitle("Export as...");
+        dialog.setHeaderText("Input file name:");
+        dialog.setContentText("File name:");
+        dialog.setGraphic(null);
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(this::exportImage);
+    }
+
+    private void exportImage(String fileName) {
+        fileName = fileName == null ? "Canvas" + rCanvas.getId() : fileName;
+        fileName +=  ".png";
+        try {
+            Image snapshot = rCanvas.snapshot(null, null);
+            ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", new File(fileName));
+
+            showAlert("Image file was saved successfully!");
+        }
+        catch (Exception e) {
+            showAlert("Failed to save image: " + e);
+        }
+    }
+
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        // sets alert window data
+        setDialogIcon(alert);
+        alert.setTitle(null);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        // sets alert graphic
+        ImageView exclamation = new ImageView("exclamation.png");
+        alert.setGraphic(exclamation);
+
+        // shows alert windows and waits for user to close it
+        alert.showAndWait();
+    }
+
+    private void setDialogIcon(Dialog<?> dialog) { /* sets dialog icon; use wildcard to suit Alert and TextInputDialog*/
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("icon.png"));
     }
 }

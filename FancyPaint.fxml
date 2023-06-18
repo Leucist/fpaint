@@ -11,20 +11,22 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="FPaintController"
-            prefHeight="600.0" prefWidth="900.0">
-
+            prefHeight="600.0" prefWidth="900.0"
+            fx:id="borderPane">
     <top>
-        <MenuBar>
-            <Menu text="File">
-                <MenuItem text="Open project"/>
-                <MenuItem text="Save project"/>
-                <MenuItem text="Export as png"/>
-            </Menu>
-        </MenuBar>
-        <HBox fx:id="completeDrawableManager" alignment="CENTER_RIGHT">
-            <Button text="✓" onMouseClicked="#completeDrawable"/>
-            <Button text="✕" onMouseClicked="#cancelCreatingDrawable"/>
-        </HBox>
+        <VBox>
+            <MenuBar fx:id="upperMenu">
+                <Menu text="File">
+                    <MenuItem text="Open project" onAction="#onOpen"/>
+                    <MenuItem text="Save project" onAction="#onSave"/>
+                    <MenuItem text="Export as png" onAction="#onExport"/>
+                </Menu>
+            </MenuBar>
+            <HBox fx:id="completeDrawableManager" alignment="CENTER_RIGHT">
+                <Button text="✓" onMouseClicked="#completeDrawable"/>
+                <Button text="✕" onMouseClicked="#cancelCreatingDrawable"/>
+            </HBox>
+        </VBox>
     </top>
     <center>
         <HBox>
@@ -34,9 +36,7 @@
                 </fx:define>
                 <RadioButton fx:id="moveTool" toggleGroup="$toggleGroup1"/>
                 <RadioButton fx:id="penTool" toggleGroup="$toggleGroup1"/>
-                <RadioButton fx:id="rectTool" toggleGroup="$toggleGroup1"/>
                 <RadioButton fx:id="bucketTool" toggleGroup="$toggleGroup1"/>
-<!--                <CheckBox fx:id=""/>-->
                 <ColorPicker fx:id="colorPicker"/>
                 <ScrollPane prefHeight="100.0">
                     <ListView fx:id="layersList" onMouseClicked="#handleListViewClick" prefWidth="130.0">
@@ -46,7 +46,7 @@
                         </items>
                     </ListView>
                 </ScrollPane>
-                <HBox>
+                <HBox fx:id="layerButtons">
                     <Button text="+" onMouseClicked="#addLayer"/>
                     <Button text="-" onMouseClicked="#removeLayer"/>
                     <Button text="↑" onMouseClicked="#moveLayer" fx:id="moveLayerUpButton"/>
