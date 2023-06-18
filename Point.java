@@ -1,6 +1,8 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/** Point class implementation
+ *  The simplest drawable object */
 public class Point extends Drawable {
     private double x, y;
     private static final double SIZE = 6.;
@@ -52,5 +54,11 @@ public class Point extends Drawable {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Point point)) return false;        /* uses pattern variable */
+        return (this.x == point.getX()) && (this.y == point.getY());
     }
 }

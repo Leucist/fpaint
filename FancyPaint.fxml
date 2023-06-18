@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.canvas.Canvas?>
@@ -17,8 +14,6 @@
         <VBox>
             <MenuBar fx:id="upperMenu">
                 <Menu text="File">
-                    <MenuItem text="Open project" onAction="#onOpen"/>
-                    <MenuItem text="Save project" onAction="#onSave"/>
                     <MenuItem text="Export as png" onAction="#onExport"/>
                 </Menu>
             </MenuBar>

@@ -1,6 +1,8 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/** Line class implementation
+ *  Simple drawable object that is build from points */
 public class Line extends Drawable {
     private final Point pt1, pt2;
     private static final double LINE_WIDTH = 2.0;

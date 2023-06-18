@@ -18,21 +18,21 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/** Controller class that initialises application' appearance and action handlers
+ *  FXML file refers to this controller file */
 public class FPaintController {
     private VCanvas vCanvas;                            /* virtual canvas; contains all layers with real canvases */
     @FXML
     private Canvas rCanvas;                             /* canvas for drawing; "points" to the active layer's canvas */
-    @FXML
-    private MenuBar upperMenu;
     @FXML
     private ListView<String> layersList;                /* menu list for selection of the active layer */
     private ObservableList<String> layerListItems;      /* list that's used to dynamically change content of the layer list */
     @FXML
     private ColorPicker colorPicker;                    /* standard color picker */
     @FXML
-    private VBox toolBox;                               /* tool box; contains all of the tools */
+    private VBox toolBox;                               /* tool box; contains all the tools */
     @FXML
-    private HBox completeDrawableManager;
+    private HBox completeDrawableManager;               /* menu with checkmark and cross for completing drawable */
     @FXML
     private ToggleGroup toggleGroup;                    /* abstract group to make layer menu/list scrollable */
     @FXML
@@ -45,16 +45,14 @@ public class FPaintController {
     private Button moveLayerUpButton;
     @FXML
     private Button moveLayerDownButton;
+
     private Drawable selectedObject;
-    private int selectedLayer = 0;                      /*  */
-    private double prevX, prevY;
-    private Point firstPoint;
-    private boolean isAddingPoints;
+    private int selectedLayer = 0;                      /* index of the currently selected layer */
+    private double prevX, prevY;                        /* coords of the previous mouse press/dragging */
+    private Point firstPoint;                           /* first point of a new drawable being created */
+    private boolean isAddingPoints;                     /* state that shows if user's drawing new drawable now or not */
 
     public void initialize() {
-        /* Initialising CSS */
-        initializeCSS();
-
         /* Creating observable list for dynamic modifying layer list content */
         layerListItems = FXCollections.observableArrayList();
         layersList.setItems(layerListItems);
@@ -76,10 +74,6 @@ public class FPaintController {
 
         /* Setting isAddingPoints as false And completeDrawableManager as hidden in the app's structure and visually */
         resetPenTool();
-    }
-
-    private void initializeCSS() {
-
     }
 
 
@@ -146,7 +140,7 @@ public class FPaintController {
     }
 
     public void handleDraggingOnCanvas(MouseEvent e, GraphicsContext g) {
-        if (selectedObject != null && !vCanvas.hasNoLayers()) {
+        if (moveTool.isSelected() && selectedObject != null && !vCanvas.hasNoLayers()) {
             selectedObject.move((e.getX()- prevX), (e.getY()- prevY));
             prevX = e.getX();       /* reassigns prev x and y */
             prevY = e.getY();
@@ -232,18 +226,6 @@ public class FPaintController {
     }
 
     @FXML
-    private void onOpen() {
-        System.out.println("lol");
-    }
-
-    @FXML
-    private void onSave() {
-        // creates objectMapper to serialise json
-        ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println("lol");
-    }
-
-    @FXML
     private void onExport() {
         // creates new dialog window for filename input
         TextInputDialog dialog = new TextInputDialog();
@@ -280,7 +262,7 @@ public class FPaintController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         // sets alert graphic
-        ImageView exclamation = new ImageView("exclamation.png");
+        ImageView exclamation = new ImageView("source/exclamation.png");
         alert.setGraphic(exclamation);
 
         // shows alert windows and waits for user to close it
@@ -289,6 +271,6 @@ public class FPaintController {
 
     private void setDialogIcon(Dialog<?> dialog) { /* sets dialog icon; use wildcard to suit Alert and TextInputDialog*/
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("icon.png"));
+        stage.getIcons().add(new Image("source/icon.png"));
     }
 }

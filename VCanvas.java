@@ -1,10 +1,9 @@
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
-/** Virtual canvas that contains layers*/
+/** Virtual canvas that contains layers and refers to the real canvas */
 public class VCanvas {
     private final Canvas rCanvas;
     private final GraphicsContext g;

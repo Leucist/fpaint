@@ -1,10 +1,9 @@
-import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
+/** Abstract class for more complex drawable objects as figures or chains */
 public abstract class ComplexDrawable extends Drawable {
     private final ArrayList<Drawable> components;
     ComplexDrawable(Color clr, ArrayList<Drawable> components) {

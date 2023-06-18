@@ -69,17 +69,17 @@ public class Layer {
         else {
             Drawable firstPiece = newDrawable.get(0);
             Drawable lastPiece = newDrawable.get(newDrawable.size() - 1);
-            // throws exception if last piece is Point
+            // throws exception if either first or last piece is Point
             if (firstPiece.getClass() == Point.class)
                 throw new IncompatibleElementException("First element of a polygonal drawable can not be Point.");
             if (lastPiece.getClass() == Point.class)
                 throw new IncompatibleElementException("Last element of a polygonal drawable can not be Point.");
             // redirects drawable to one of two constructors;
             // ..if last and first points of drawable are the same - it's a figure, else - chain
-            if (((Line)firstPiece).getPt1() == ((Line)lastPiece).getPt2())
-                this.objects.add(new Chain(firstPiece.getColor(), newDrawable));
-            else
+            if (((Line)firstPiece).getPt1().equals(((Line)lastPiece).getPt2()))
                 this.objects.add(new Figure(firstPiece.getColor(), newDrawable));
+            else
+                this.objects.add(new Chain(firstPiece.getColor(), newDrawable));
             // sets the new drawable as complete
             this.objects.get(this.objects.size()-1).setComplete();
             // clears particles of a newly created drawable

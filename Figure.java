@@ -1,11 +1,9 @@
-import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Polyline;
-
 import java.util.ArrayList;
 
+/** Complex drawable object that is build from lines
+ *  First and last line collide */
 public class Figure extends ComplexDrawable {
     private Color fillColor;
     Figure(Color clr, ArrayList<Drawable> components) {
@@ -13,7 +11,7 @@ public class Figure extends ComplexDrawable {
         this.fillColor = Color.TRANSPARENT;
     }
 
-    public Color getFillColor () { return this.fillColor; }
+    public Color getFillColor () { return this.fillColor; }         /* unused :P */
     public void setFillColor (Color clr) { this.fillColor = clr; }
 
     @Override
